@@ -6,8 +6,8 @@ import (
 	"io/ioutil"
 	"sort"
 
-	palgate "github.com/zcahana/palgate-sdk"
 	"github.com/zcahana/palgate-log-archiver/sink"
+	palgate "github.com/zcahana/palgate-sdk"
 
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
@@ -58,22 +58,22 @@ func initSheetsService() (*sheets.Service, error) {
 	return service, nil
 }
 
-func (s *sheetsSink) Receive(records []palgate.LogRecord) error {
+func (s *sheetsSink) Receive(records []palgate.LogRecord) (int, error) {
 	rows := rowsFromRecords(records)
 
 	topRow, err := s.readTopRow()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	rows = s.selectNewerRows(rows, topRow)
 
 	err = s.writeTopRows(rows)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return len(rows), nil
 }
 
 func (s *sheetsSink) readTopRow() (Row, error) {

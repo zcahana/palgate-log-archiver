@@ -5,5 +5,5 @@ import (
 )
 
 type Sink interface {
-	Receive(records []palgate.LogRecord) error
+	Receive(records []palgate.LogRecord) (int, error)
 }
