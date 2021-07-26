@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/oauth2/google"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -11,20 +13,38 @@ import (
 	"golang.org/x/oauth2"
 )
 
+const (
+	credentialsFile = "secrets/credentials.json"
+	tokenFile       = "secrets/token.json"
+	authScope       = "https://www.googleapis.com/auth/spreadsheets"
+)
+
+func getGoogleConfig() (*oauth2.Config, error) {
+	b, err := ioutil.ReadFile(credentialsFile)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read client secret file: %v", err)
+	}
+
+	config, err := google.ConfigFromJSON(b, authScope)
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse client secret file to config: %v", err)
+	}
+
+	return config, nil
+}
+
 // Retrieve a token, saves the token, then returns the generated client.
 func getClient(config *oauth2.Config) *http.Client {
 	// The file token.json stores the user's access and refresh tokens, and is
 	// created automatically when the authorization flow completes for the first
 	// time.
-	tokFile := "token.json"
-	tok, err := tokenFromFile(tokFile)
+	tok, err := tokenFromFile(tokenFile)
 	if err != nil {
 		tok = getTokenFromWeb(config)
-		saveToken(tokFile, tok)
+		saveToken(tokenFile, tok)
 	}
 	return config.Client(context.Background(), tok)
 }
-
 
 // Request a token from the web, then returns the retrieved token.
 func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
@@ -41,6 +61,7 @@ func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	if err != nil {
 		log.Fatalf("Unable to retrieve token from web: %v", err)
 	}
+
 	return tok
 }
 

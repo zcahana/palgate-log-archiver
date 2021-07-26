@@ -3,13 +3,11 @@ package googlesheets
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"sort"
 
 	"github.com/zcahana/palgate-log-archiver/sink"
 	palgate "github.com/zcahana/palgate-sdk"
 
-	"golang.org/x/oauth2/google"
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"
 )
@@ -36,23 +34,15 @@ func NewSink() (sink.Sink, error) {
 }
 
 func initSheetsService() (*sheets.Service, error) {
-	ctx := context.Background()
-
-	b, err := ioutil.ReadFile("credentials.json")
+	config, err := getGoogleConfig()
 	if err != nil {
-		return nil, fmt.Errorf("unable to read client secret file: %v", err)
-	}
-
-	// If modifying these scopes, delete your previously saved token.json.
-	config, err := google.ConfigFromJSON(b, "https://www.googleapis.com/auth/spreadsheets")
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse client secret file to config: %v", err)
+		return nil, err
 	}
 
 	client := getClient(config)
-	service, err := sheets.NewService(ctx, option.WithHTTPClient(client))
+	service, err := sheets.NewService(context.Background(), option.WithHTTPClient(client))
 	if err != nil {
-		return nil, fmt.Errorf("unable to retrieve Sheets client: %v", err)
+		return nil, fmt.Errorf("unable to retrieve Google Sheets client: %v", err)
 	}
 
 	return service, nil
