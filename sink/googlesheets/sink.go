@@ -85,6 +85,7 @@ func (s *sheetsSink) readTopRow() (Row, error) {
 		return nil, fmt.Errorf("error validating top row: %v", err)
 	}
 
+	row = row.defaultize()
 	return row, nil
 }
 

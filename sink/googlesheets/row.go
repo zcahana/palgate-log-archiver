@@ -61,11 +61,15 @@ func (row Row) isEmpty() bool {
 }
 
 func (row Row) validate() error {
-	if len(row) != numOfRowElements {
+	if len(row) > numOfRowElements {
 		return fmt.Errorf("invalid number of row elements: %d", len(row))
 	}
 
 	for i, value := range row {
+		if value == nil {
+			continue
+		}
+
 		_, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("invalid value at row element %d: %s (type %T)", i, value, value)
@@ -73,6 +77,21 @@ func (row Row) validate() error {
 	}
 
 	return nil
+}
+
+func (row Row) defaultize() Row {
+	const defaultValue = ""
+
+	newRow := make(Row, numOfRowElements)
+	for i := 0; i < numOfRowElements; i++ {
+		if i >= len(row) || row[i] == nil {
+			newRow[i] = defaultValue
+		} else {
+			newRow[i] = row[i]
+		}
+	}
+
+	return newRow
 }
 
 func (row Row) isAfter(otherRow Row) bool {
