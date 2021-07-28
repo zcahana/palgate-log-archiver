@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	credentialsFile = "secrets/credentials.json"
-	tokenFile       = "secrets/token.json"
+	credentialsFile = "credentials.json"
+	tokenFile       = "token.json"
 	authScope       = "https://www.googleapis.com/auth/spreadsheets"
 )
 
