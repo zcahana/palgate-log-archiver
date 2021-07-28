@@ -44,7 +44,7 @@ github.com/spf13/pflag
 github.com/spf13/viper
 # github.com/subosito/gotenv v1.2.0
 github.com/subosito/gotenv
-# github.com/zcahana/palgate-sdk v0.0.0-20210725222750-0558f3e7477e
+# github.com/zcahana/palgate-sdk v0.0.0-20210728104233-858fa2992a5a
 ## explicit
 github.com/zcahana/palgate-sdk
 # go.opencensus.io v0.23.0

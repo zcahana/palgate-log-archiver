@@ -35,6 +35,7 @@ func InitConfig() (*Config, error) {
 	viper.BindEnv(configKeyAuthToken, configEnvAuthToken)
 
 	viper.SetConfigName(".palgate")
+	viper.AddConfigPath(".")
 	viper.AddConfigPath("$HOME/")
 	viper.SetConfigType("yaml")
 
