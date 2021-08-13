@@ -8,6 +8,9 @@ import (
 const (
 	ResponseStatusSuccess = "ok"
 	ResponseStatusFailed  = "failed"
+
+	LogRecordDateFormat = "2/1/2006"
+	LogRecordTimeFormat = "15:04:05"
 )
 
 type GetLogResponse struct {
@@ -76,15 +79,13 @@ func (record *LogRecord) Name() string {
 }
 
 func (record *LogRecord) Date() string {
-	const format = "2/1/2006"
 	t := time.Unix(int64(record.Timestamp), 0)
-	return t.Local().Format(format)
+	return t.Local().Format(LogRecordDateFormat)
 }
 
 func (record *LogRecord) Time() string {
-	const format = "15:04:05"
 	t := time.Unix(int64(record.Timestamp), 0)
-	return t.Local().Format(format)
+	return t.Local().Format(LogRecordTimeFormat)
 }
 
 type UserRequest struct {
