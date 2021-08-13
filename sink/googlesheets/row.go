@@ -2,6 +2,7 @@ package googlesheets
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/zcahana/palgate-sdk"
 )
@@ -96,18 +97,22 @@ func (row Row) defaultize() Row {
 
 func (row Row) isAfter(otherRow Row) bool {
 	// Date
-	if row.Date() > otherRow.Date() {
+	rowDate, _ := time.Parse(palgate.LogRecordDateFormat, row.Date())
+	otherDate, _ := time.Parse(palgate.LogRecordDateFormat, otherRow.Date())
+	if rowDate.After(otherDate) {
 		return true
 	}
-	if row.Date() < otherRow.Date() {
+	if otherDate.After(rowDate) {
 		return false
 	}
 
 	// Time
-	if row.Time() > otherRow.Time() {
+	rowTime, _ := time.Parse(palgate.LogRecordTimeFormat, row.Time())
+	otherTime, _ := time.Parse(palgate.LogRecordTimeFormat, otherRow.Time())
+	if rowTime.After(otherTime) {
 		return true
 	}
-	if row.Time() < otherRow.Time() {
+	if otherTime.After(rowTime) {
 		return false
 	}
 
